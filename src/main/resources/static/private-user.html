@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Private User</title>
+    <script>
+        window.onload = function () {
+            const token = localStorage.getItem('jwtToken');
+            if (!token) {
+                alert('No token found. Please log in again.');
+                window.location.href = "/google/oauth/login";
+                return;
+            }
+
+            fetch('/user', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }
+                alert('No authentication data found. Redirecting to login.');
+                window.location.href = "/google/oauth/login";
+                return;
+            })
+            .then(data => {
+                document.getElementById("response").innerText = data;
+            })
+            .catch(error => {
+                document.getElementById("response").innerText = error.message;
+            });
+        };
+    </script>
+</head>
+<body>
+    <h1>All Users Page</h1>
+    <p id="response">Loading...</p>
+</body>
+</html>

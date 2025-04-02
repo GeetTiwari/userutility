@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome</title>
+    <script>
+        window.onload = function() {
+            const email = localStorage.getItem('email');
+            const token = localStorage.getItem('jwtToken');
+
+            if (!email || !token) {
+                document.body.innerHTML = ''; // Clear the page content
+                alert('No authentication data found. Redirecting to login.');
+                window.location.href = "/google/oauth/login";
+                return;
+            }
+
+            document.getElementById('userEmail').innerText = email;
+            document.getElementById('links').innerHTML = "<li><a href='#' onclick='accessPrivateUser()'>Go to Users</a></li>";
+        };
+
+        function accessPrivateUser() {
+            const token = localStorage.getItem('jwtToken');
+            if (!token) {
+                alert('No token found. Please log in again.');
+                return;
+            }
+            window.location.href = "/private-user.html";
+        }
+
+        function logout() {
+            localStorage.removeItem('jwtToken');
+            localStorage.removeItem('email');
+            window.location.href = "/google/oauth/login";
+        }
+    </script>
+</head>
+<body>
+    <div style="text-align: right;">
+        <button onclick="logout()">Logout</button>
+    </div>
+    <h1>Welcome, <span id="userEmail"></span>!</h1>
+    <p>Your authentication was successful.</p>
+    <h3>Useful Links:</h3>
+    <ul id="links"></ul>
+</body>
+</html>
